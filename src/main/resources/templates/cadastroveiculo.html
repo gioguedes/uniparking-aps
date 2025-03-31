@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastrar Veículo - Uniparking</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/style.css}" />
+  <link rel="icon" type="image/png" href="https://img.icons8.com/ios/50/parking.png">
+  <style>
+    .card { margin-top: 20px; }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header>
+  <nav class="navbar navbar-dark bg-dark shadow">
+    <div class="container">
+      <a class="navbar-brand fw-bold" th:href="@{/}">
+        <i class="fa-solid fa-car me-2"></i> Uniparking
+      </a>
+    </div>
+  </nav>
+</header>
+<main class="container my-5 flex-grow-1">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1 class="card-title mb-0">
+          <i class="fa-solid fa-car-side me-2"></i> Cadastrar Veículo
+        </h1>
+        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#searchPanel" aria-expanded="false" aria-controls="searchPanel">
+          <i class="fa-solid fa-magnifying-glass"></i> Procurar por Placa
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="collapse mb-3" id="searchPanel">
+        <form th:action="@{/veiculos/buscar}" method="get" class="d-flex justify-content-end">
+          <input type="text" name="placa" class="form-control w-50 me-2" placeholder="Digite a placa" required>
+          <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+      </div>
+      <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+      <form th:action="@{/veiculos}" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+          <label for="placa" class="form-label">Placa:</label>
+          <input type="text" class="form-control" id="placa" name="placa" required maxlength="10" />
+          <div class="invalid-feedback">Informe a placa do veículo (máximo 10 caracteres).</div>
+        </div>
+        <div class="mb-3">
+          <label for="marca" class="form-label">Modelo/Marca:</label>
+          <input type="text" class="form-control" id="marca" name="marca" required maxlength="50" />
+          <div class="invalid-feedback">Informe o modelo/marca (máximo 50 caracteres).</div>
+        </div>
+        <div class="mb-3">
+          <label for="cliente" class="form-label">Cliente:</label>
+          <select class="form-select" id="cliente" name="cliente.idCliente" required>
+            <option value="" disabled selected>Selecione o Cliente</option>
+            <option th:each="cliente : ${clientes}" th:value="${cliente.idCliente}" th:text="${cliente.nome}"></option>
+          </select>
+          <div class="invalid-feedback">Selecione um cliente.</div>
+        </div>
+        <div class="mb-3">
+          <label for="estacionamento" class="form-label">Estacionamento:</label>
+          <select class="form-select" id="estacionamento" name="estacionamentoId" required>
+            <option value="" disabled selected>Selecione o Estacionamento</option>
+            <option th:each="est : ${estacionamentos}" th:value="${est.idEstacionamento}" th:text="${est.nome}"></option>
+          </select>
+          <div class="invalid-feedback">Selecione um estacionamento.</div>
+        </div>
+        <div class="mb-3">
+          <label for="numeroVaga" class="form-label">Número da Vaga (opcional):</label>
+          <input type="text" class="form-control" id="numeroVaga" name="numeroVaga" placeholder="Ex.: A1" maxlength="10" />
+        </div>
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-floppy-disk me-1"></i> Cadastrar Veículo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+<footer class="bg-dark text-white text-center py-3">
+  <div class="container">
+    <p>&copy; 2025 Uniparking | Sistema de Gerenciamento de Estacionamento</p>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
+</body>
+</html>

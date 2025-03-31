@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Uniparking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/ios/50/parking.png">
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body class="bg-light">
+<header>
+    <nav class="navbar navbar-dark bg-dark shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fa-solid fa-parking me-2"></i> Uniparking
+            </a>
+        </div>
+    </nav>
+</header>
+<main class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h3 class="display-4 mb-0" th:text="${registroPage.totalElements}">0</h3>
+                    <p class="mb-0">Total de Registros</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h1 class="card-title mb-0 fs-4">
+                <i class="fa-solid fa-list me-2"></i> Registros
+            </h1>
+            <div>
+                <a class="btn btn-info" th:href="@{/registros/download}">
+                    <i class="fa-solid fa-download me-1"></i> Download PDF
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                        <tr>
+                            <th><i class="fa-solid fa-user me-1"></i> Nome Cliente</th>
+                            <th><i class="fa-solid fa-car me-1"></i> Placa</th>
+                            <th><i class="fa-solid fa-square-parking me-1"></i> Vaga</th>
+                            <th><i class="fa-solid fa-calendar-days me-1"></i> Data Entrada</th>
+                            <th><i class="fa-solid fa-calendar-check me-1"></i> Data Saída</th>
+                            <th><i class="fa-solid fa-dollar-sign me-1"></i> Valor Cobrado</th>
+                            <th><i class="fa-solid fa-clock me-1"></i> Duração</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="registro : ${registroPage.content}">
+                            <td th:text="${(registro.veiculo != null and registro.veiculo.cliente != null) ? registro.veiculo.cliente.nome : 'N/A'}"></td>
+                            <td th:text="${registro.veiculo != null ? registro.veiculo.placa : 'N/A'}"></td>
+                            <td th:text="${registro.vaga != null ? registro.vaga.numeroVaga : 'N/A'}"></td>
+                            <td th:text="${#temporals.format(registro.dataEntrada, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${registro.dataSaida != null ? #temporals.format(registro.dataSaida, 'dd/MM/yyyy HH:mm') : 'Em aberto'}"></td>
+                            <td th:text="${registro.valorCobrado != null ? 'R$ ' + #numbers.formatDecimal(registro.valorCobrado, 1, 2) : '-'}"></td>
+                            <td th:text="${registro.duracao != null ? registro.duracao + ' min' : '-'}"></td>
+                            <td class="text-center">
+                                <span class="status-badge"
+                                      th:classappend="${registro.dataSaida == null ? 'status-active' : 'status-closed'}"
+                                      th:text="${registro.dataSaida == null ? 'Em aberto' : 'Finalizado'}">
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-danger btn-sm" th:href="@{'/registros/excluir/' + ${registro.idRegistro}}"
+                                   onclick="return confirm('Deseja realmente excluir este registro?');">
+                                    <i class="fa-solid fa-trash me-1"></i> Excluir
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div>
+                    <span class="text-muted">Mostrando <span th:text="${registroPage.numberOfElements}">10</span> de <span th:text="${registroPage.totalElements}">100</span> registros</span>
+                </div>
+                <nav>
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item" th:classappend="${registroPage.number == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/registros(page=${registroPage.number - 1})}" aria-label="Anterior">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="pageNum : ${pageNumbers}" th:classappend="${registroPage.number + 1 == pageNum ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/registros(page=${pageNum - 1})}" th:text="${pageNum}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${registroPage.number + 1 == registroPage.totalPages ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/registros(page=${registroPage.number + 1})}" aria-label="Próximo">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+        <p class="mb-0">&copy; 2025 Uniparking | Sistema de Gerenciamento de Estacionamento</p>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+</body>
+</html>

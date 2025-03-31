@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vagas Disponíveis - Uniparking</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/style.css}" />
+  <link rel="icon" type="image/png" href="https://img.icons8.com/ios/50/parking.png">
+</head>
+<body>
+<header>
+  <nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand" th:href="@{/}">
+        <i class="fa-solid fa-square-parking"></i> Uniparking
+      </a>
+      <a class="btn btn-outline-light" th:href="@{/}">
+        <i class="fa-solid fa-house"></i> Início
+      </a>
+    </div>
+  </nav>
+</header>
+<main class="container my-4">
+  <h1 class="text-center mb-4"><i class="fa-solid fa-square-parking"></i> Vagas Disponíveis</h1>
+  <form th:action="@{/vagas}" method="get" class="row g-3 justify-content-center">
+    <div class="col-sm-6">
+      <label for="estacionamento" class="form-label"><i class="fa-solid fa-building"></i> Selecione o Estacionamento:</label>
+      <select class="form-select" name="estacionamentoId" id="estacionamento">
+        <option th:each="est : ${estacionamentos}" th:value="${est.idEstacionamento}" th:text="${est.nome}"></option>
+      </select>
+    </div>
+    <div class="col-auto align-self-end">
+      <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-filter"></i> Filtrar
+      </button>
+    </div>
+  </form>
+  <div class="vagas-info text-center mt-4">
+    <p><strong>Total de vagas:</strong> <span th:text="${totalVagas}">0</span></p>
+    <p><strong>Vagas disponíveis:</strong> <span th:text="${vagasDisponiveis}">0</span></p>
+  </div>
+</main>
+<footer class="bg-dark text-white text-center py-3">
+  <button class="btn btn-outline-light" onclick="window.location.href='/'">
+    <i class="fa-solid fa-arrow-left"></i> Voltar para o Início
+  </button>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

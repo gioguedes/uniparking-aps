@@ -1,0 +1,131 @@
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #224abe;
+    --success-color: #1cc88a;
+    --danger-color: #e74a3b;
+    --light-color: #f8f9fc;
+    --dark-color: #5a5c69;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    min-height: 550px;
+}
+
+.login-image {
+    background-image: url('https://i.imgur.com/Ikkk6r4.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex: 1;
+    display: none;
+}
+
+.login-form {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo i {
+    font-size: 3rem;
+    color: var(--primary-color);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+.form-floating {
+    margin-bottom: 20px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+}
+
+.btn-login {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-login:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.btn-register {
+    background-color: white;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    padding: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-register:hover {
+    background-color: var(--light-color);
+    transform: translateY(-2px);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--dark-color);
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.remember-me input {
+    margin-right: 10px;
+}
+
+@media (min-width: 768px) {
+    .login-image {
+        display: block;
+    }
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--dark-color);
+}

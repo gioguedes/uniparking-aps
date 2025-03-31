@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário - Uniparking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/usersignup.css}" />
+    <link rel="icon" type="image/png" href="https://img.icons8.com/ios/50/parking.png">
+</head>
+<body>
+<div class="register-container animate__animated animate__fadeIn">
+    <div class="register-image"></div>
+    <div class="register-form">
+        <div class="register-logo">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <h2 class="register-title">Cadastro de Usuário</h2>
+        <div th:if="${errorMessage}" class="alert alert-danger animate__animated animate__shakeX" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${errorMessage}"></span>
+        </div>
+        <form th:action="@{/login/cadastrar}" th:object="${usuario}" method="post" id="registerForm">
+            <div class="form-floating">
+                <input type="text" th:field="*{login}" class="form-control" id="login" placeholder="Digite seu login" required>
+                <label for="login"><i class="fas fa-user me-2"></i>Login</label>
+            </div>
+            <div class="form-floating position-relative">
+                <input type="password" th:field="*{senha}" class="form-control" id="senha" placeholder="Digite sua senha" required>
+                <label for="senha"><i class="fas fa-lock me-2"></i>Senha</label>
+                <span class="password-toggle" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </span>
+            </div>
+            <div class="password-strength bg-secondary opacity-25" id="passwordStrength"></div>
+            <div class="strength-text text-secondary" id="strengthText">Força da senha: Fraca</div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="confirmSenha" placeholder="Confirme sua senha" required>
+                <label for="confirmSenha"><i class="fas fa-lock me-2"></i>Confirme sua senha</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" th:field="*{nome}" class="form-control" id="nome" placeholder="Digite seu nome" required>
+                <label for="nome"><i class="fas fa-id-card me-2"></i>Nome completo</label>
+            </div>
+            <button type="submit" class="btn btn-register w-100 mb-3">
+                <i class="fas fa-user-plus me-2"></i>Cadastrar
+            </button>
+            <a th:href="@{/login}" class="btn btn-back w-100">
+                <i class="fas fa-arrow-left me-2"></i>Voltar para Login
+            </a>
+        </form>
+        <div class="register-footer">
+            <p>&copy; 2025 Uniparking - Sistema de Gerenciamento de Estacionamento</p>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('senha');
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+        const passwordStrength = document.getElementById('passwordStrength');
+        const strengthText = document.getElementById('strengthText');
+        password.addEventListener('input', function() {
+            const value = this.value;
+            let strength = 0;
+            if (value.length >= 8) strength += 25;
+            if (/[a-z]/.test(value)) strength += 25;
+            if (/[A-Z]/.test(value)) strength += 25;
+            if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(value)) strength += 25;
+            passwordStrength.style.width = strength + '%';
+            if (strength < 50) {
+                passwordStrength.className = 'password-strength bg-danger';
+                strengthText.className = 'strength-text text-danger';
+                strengthText.textContent = 'Força da senha: Fraca';
+            } else if (strength < 75) {
+                passwordStrength.className = 'password-strength bg-warning';
+                strengthText.className = 'strength-text text-warning';
+                strengthText.textContent = 'Força da senha: Média';
+            } else {
+                passwordStrength.className = 'password-strength bg-success';
+                strengthText.className = 'strength-text text-success';
+                strengthText.textContent = 'Força da senha: Forte';
+            }
+        });
+        const registerForm = document.getElementById('registerForm');
+        const confirmPassword = document.getElementById('confirmSenha');
+        registerForm.addEventListener('submit', function(e) {
+            const login = document.getElementById('login').value.trim();
+            const senha = password.value.trim();
+            const confirmSenha = confirmPassword.value.trim();
+            const nome = document.getElementById('nome').value.trim();
+            if (login === '' || senha === '' || confirmSenha === '' || nome === '') {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Campos obrigatórios',
+                    text: 'Por favor, preencha todos os campos',
+                    icon: 'warning',
+                    confirmButtonColor: '#4e73df'
+                });
+                return;
+            }
+            if (senha !== confirmSenha) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Senhas não conferem',
+                    text: 'A senha e a confirmação de senha devem ser iguais',
+                    icon: 'error',
+                    confirmButtonColor: '#4e73df'
+                });
+                return;
+            }
+            if (senha.length < 6) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Senha muito curta',
+                    text: 'A senha deve ter pelo menos 6 caracteres',
+                    icon: 'warning',
+                    confirmButtonColor: '#4e73df'
+                });
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
